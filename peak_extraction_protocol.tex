@@ -1,0 +1,85 @@
+% Peak extraction protocol -- append to the comparative study setup.
+% Requires: amsmath, booktabs.
+
+\subsection{Peak extraction and characterisation}
+\label{subsec:peak-extraction}
+
+Each detector $m \in \mathcal{M}$ produces a score series $s^{(m)}_t$ over a
+common time index. No anomaly labels are used. Because detector score scales
+differ, we define a comparable operating point using the same empirical
+quantile $\alpha$ for every detector:
+\begin{equation}
+  u_m = Q_{\alpha}\!\left(s^{(m)}_1,\ldots,s^{(m)}_T\right),
+  \qquad I^{(m)}_t = \mathbf{1}\{s^{(m)}_t > u_m\}.
+  \label{eq:global-percentile}
+\end{equation}
+Thus each detector has approximately the same raw exceedance rate
+$1-\alpha$. Ties can reduce the realised rate and are therefore reported.
+
+\paragraph{Runs declustering.}
+Raw exceedances separated by at most $r$ observations are assigned to one
+cluster, represented by its largest score. The resulting event set is
+$\mathcal{E}^{(m)}$. We report both the raw exceedance count $N_m$ and event
+count $K_m$. Their ratio
+\begin{equation}
+  \hat{\theta}_m = K_m/N_m
+  \label{eq:extremal-index}
+\end{equation}
+characterises persistence: smaller values indicate that extreme scores arrive
+in longer or more closely spaced bursts.
+
+\paragraph{Seasonal diagnostic.}
+Seasonality is measured rather than removed. Let $c_m(d)$ be the mean score for
+calendar day $d$ across years. We report the fraction of score variance
+explained by this calendar-day climatology,
+\begin{equation}
+  S_m = 1 -
+  \frac{\sum_t (s^{(m)}_t-c_m(d_t))^2}
+       {\sum_t (s^{(m)}_t-\bar{s}^{(m)})^2},
+  \label{eq:seasonal-strength}
+\end{equation}
+clipped to $[0,1]$. Month--day keys keep the climatology aligned through leap
+years. A value near zero indicates little repeatable annual structure in the
+scores; a value near one indicates a strongly repeating calendar-day pattern.
+
+A month-of-year event histogram is retained as a direct visual diagnostic of
+seasonal concentration in the extracted events.
+
+\begin{table}[t]
+  \centering
+  \caption{Peak extraction and characterisation parameters.}
+  \label{tab:peak-params}
+  \begin{tabular}{llc}
+    \toprule
+    Symbol & Meaning & Value \\
+    \midrule
+    $\alpha$ & global extraction percentile & $0.99$ \\
+    $r$      & declustering and event-matching window & $15$ days \\
+    $\kappa$ & minimum detectors for consensus & $3$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Cross-detector agreement.}
+For each pair of detectors, raw exceedance indicators before declustering are
+compared without temporal widening, over the span covered by both score series:
+\begin{equation}
+  J(m,m') =
+  \frac{|\mathcal{I}^{(m)} \cap \mathcal{I}^{(m')}|}
+       {|\mathcal{I}^{(m)} \cup \mathcal{I}^{(m')}|}.
+\end{equation}
+Consensus events are maximal intervals supported by at least $\kappa$
+detectors. Concordance between detectors with different inductive biases is a
+useful prioritisation signal, but does not establish physical truth.
+
+\paragraph{Outputs and limitations.}
+For every series the analysis writes the per-detector diagnostic table, monthly
+histogram, detector Jaccard matrix, consensus intervals, event masks, and the
+existing detailed interpretation figures. Those figures centre on each
+declustered cluster maximum and separately mark the other raw abnormal points
+in its runs cluster. For subsequence detectors, the cluster maximum selects the
+complete subsequence shown with its nearest training neighbour; MP comparisons
+are z-normalized. An ``event'' means only that a score
+is extreme relative to that detector's own distribution. Percentile extraction
+does not estimate a false-alarm probability, correct score drift, or prove that
+a physical anomaly occurred. Sensitivity analyses vary $\alpha$ and $r$.

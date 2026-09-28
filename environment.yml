@@ -1,0 +1,48 @@
+name: climate-anomaly-case-study
+
+channels:
+  - pytorch
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  # Runtime
+  - python=3.11
+  - pip>=24
+  - setuptools>=68
+  - wheel
+
+  # Numerical and statistical stack. NumPy <2.3 is required by Numba 0.61.
+  - numpy>=2.0,<2.3
+  - pandas>=2.2,<3
+  - scipy>=1.14,<2
+  - numba>=0.61,<0.62
+  - scikit-learn>=1.6,<2
+  - statsmodels>=0.14,<0.15
+
+  # Deep learning (portable CPU build).
+  - pytorch=2.5.*
+  - cpuonly
+  - einops>=0.8,<1
+  - sympy>=1.13,<2
+
+  # Time-series analysis and plotting
+  - stumpy>=1.13,<2
+  - matplotlib>=3.9,<4
+  - plotly>=6,<7
+
+  # Climate-data extraction and optional model layers
+  - xarray>=2024.10
+  - netcdf4>=1.7
+  - pywavelets>=1.7
+
+  # Toolchain for separately building the external libimp extension.
+  - cxx-compiler
+  - cmake>=3.28
+  - ninja
+  - pybind11>=2.13
+
+  # Packages unavailable or more current through PyPI, followed by this project.
+  - pip:
+      - reformer-pytorch>=1.4.4,<2
+      - -e .

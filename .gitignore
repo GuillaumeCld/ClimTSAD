@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+.vscode/
+.cache/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# Local interactive application; keep it out of the GitHub repository.
+case_study/app.py
+case_study/cli.py
+
+# Generated experiment and LaTeX build products
+outputs/
+docs/build/
+docs/*.aux
+docs/*.log
+docs/*.out
